@@ -4,10 +4,9 @@
 */
 
 
-vPID::vPID(double* input, double* setpoint, double* output, double p, double i, double d, int ControllerDirection)
-   :PID(input, setpoint, output, p , i, d, ControllerDirection)
+vPID::vPID(double* input, double* output, double* setpoint, double p, double i, double d, int ControllerDirection)
+   :PID(input, output, setpoint, p , i, d, ControllerDirection)
 	{
-		
 		SetOutputLimits(-255,255);
 
 		// Sample Time is 10 ms
@@ -37,7 +36,7 @@ bool vPID::Compute()
       /*Compute all the working error variables*/
       double input = *myInput;
       double setpoint = *mySetpoint;
-      if(setpoint == 0) 
+      if(setpoint == 0)
         lastOutput = 0;
       double error = setpoint - input;
       ITerm+= (ki * error);
@@ -46,14 +45,14 @@ bool vPID::Compute()
       if(ITerm + lastOutput > outMax) ITerm= outMax-lastOutput;
       else if(ITerm + lastOutput < outMin) ITerm= outMin - lastOutput;
       double dInput = (input - lastInput);
- 
+
       /*Compute PID Output*/
       double output = lastOutput + kp * error + ITerm- kd * dInput;
-      
+
       if(output > outMax) output = outMax;
       else if(output < outMin) output = outMin;
       *myOutput = output;
-      
+
       /*Remember some variables for next time*/
       lastInput = input;
       lastTime = now;
